@@ -86,7 +86,7 @@ namespace :provision do
     task :install_plugins => [:install_cli] do
       on roles(:web) do
         [
-          ['git', '2.4.0'],
+          ['git', 'latest'],
           ['github', 'latest']
         ].each do |plugin|
           name, version = plugin
