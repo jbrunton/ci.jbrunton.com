@@ -61,6 +61,57 @@ namespace :provision do
       END
     end
   end
+
+  namespace :jenkins do
+    task :restart do
+      on roles(:web) do
+        execute "sudo java -jar jenkins-cli.jar -s http://localhost:8080/ safe-restart"
+      end
+    end
+
+    task :install_cli do
+      on roles(:web) do
+        execute_script <<-END
+          wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+          while [ $? -ne 0 ];
+          do
+            echo "Waiting for Jenkins to start..."
+            sleep 10
+            wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+          done
+        END
+      end
+    end
+
+    task :install_plugins => [:install_cli] do
+      on roles(:web) do
+        [
+          # git plugin dependencies
+          ['credentials', '1.24'],
+          ['git-client', '1.19.0'],
+          ['scm-api', '1.0'],
+          ['mailer', '1.16'],
+          ['matrix-project', '1.6'],
+          ['ssh-credentials', '1.11'],
+
+          # git plugin
+          ['git', '2.4.0']
+        ].each do |plugin|
+          name, version = plugin
+          execute <<-END
+            java -jar jenkins-cli.jar \
+              -s http://localhost:8080/ \
+              install-plugin \
+              http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi
+          END
+        end
+      end
+    end
+
+    Rake::Task[:install_plugins].enhance do
+      Rake::Task['provision:jenkins:restart'].invoke
+    end
+  end
 end
 
 desc "Provision the server"
@@ -71,4 +122,5 @@ task :provision do
   Rake::Task["provision:install_jenkins"].invoke
   Rake::Task["provision:install_git"].invoke
   Rake::Task["provision:install_android_sdk"].invoke
+  Rake::Task["provision:jenkins:install_plugins"].invoke
 end

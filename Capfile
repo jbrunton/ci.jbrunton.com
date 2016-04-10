@@ -25,3 +25,9 @@ require 'capistrano/deploy'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
+
+def execute_script(script)
+  filename = capture("mktemp /tmp/scriptXXX")
+  upload! StringIO.new(script), filename
+  execute "bash #{filename}"
+end
