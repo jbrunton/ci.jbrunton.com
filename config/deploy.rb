@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.4.0'
 
-set :application, 'jenkins.jbrunton.com'
+set :application, 'ci.jbrunton.com'
 set :jenkins_home, '/var/lib/jenkins'
 
 # Default branch is :master
