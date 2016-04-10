@@ -111,6 +111,24 @@ namespace :provision do
     Rake::Task[:install_plugins].enhance do
       Rake::Task['provision:jenkins:restart'].invoke
     end
+
+    task :configure_jobs do
+      on roles(:web) do
+        execute "mkdir -p /tmp/jobs"
+        ['pocket-timeline-android'].each do |job_name|
+          upload! "config/jobs/#{job_name}.xml", "/tmp/jobs/#{job_name}.xml"
+          execute <<-END
+            java -jar jenkins-cli.jar \
+              -s http://localhost:8080/ \
+              create-job #{job_name} < /tmp/jobs/#{job_name}.xml
+          END
+        end
+      end
+    end
+
+    Rake::Task[:configure_jobs].enhance do
+      Rake::Task['provision:jenkins:restart'].invoke
+    end
   end
 
   namespace :sonar do
@@ -136,5 +154,6 @@ task :provision do
   Rake::Task["provision:install_git"].invoke
   Rake::Task["provision:install_android_sdk"].invoke
   Rake::Task["provision:jenkins:install_plugins"].invoke
+  Rake::Task["provision:jenkins:configure_jobs"].invoke
   Rake::Task["provision:sonar:install"].invoke
 end
