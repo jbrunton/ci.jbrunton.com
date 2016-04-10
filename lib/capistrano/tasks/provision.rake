@@ -112,6 +112,19 @@ namespace :provision do
       Rake::Task['provision:jenkins:restart'].invoke
     end
   end
+
+  namespace :sonar do
+    task :install do
+      on roles(:web) do
+        execute <<-END
+          echo "deb http://downloads.sourceforge.net/project/sonar-pkg/deb binary/" >> /etc/apt/sources.list
+          apt-get update
+          sudo apt-get install -y --force-yes sonar
+          /opt/sonar/bin/linux-x86-64/sonar.sh start
+        END
+      end
+    end
+  end
 end
 
 desc "Provision the server"
@@ -123,4 +136,5 @@ task :provision do
   Rake::Task["provision:install_git"].invoke
   Rake::Task["provision:install_android_sdk"].invoke
   Rake::Task["provision:jenkins:install_plugins"].invoke
+  Rake::Task["provision:sonar:install"].invoke
 end
