@@ -86,23 +86,23 @@ namespace :provision do
     task :install_plugins => [:install_cli] do
       on roles(:web) do
         [
-          # git plugin dependencies
-          ['credentials', '1.24'],
-          ['git-client', '1.19.0'],
-          ['scm-api', '1.0'],
-          ['mailer', '1.16'],
-          ['matrix-project', '1.6'],
-          ['ssh-credentials', '1.11'],
-
-          # git plugin
-          ['git', '2.4.0']
+          ['git', '2.4.0'],
+          ['github', 'latest']
         ].each do |plugin|
           name, version = plugin
           execute <<-END
-            java -jar jenkins-cli.jar \
-              -s http://localhost:8080/ \
-              install-plugin \
-              http://updates.jenkins-ci.org/download/plugins/#{name}/#{version}/#{name}.hpi
+            curl -X POST -d \
+              '<jenkins><install plugin="#{name}@#{version}" /></jenkins>' \
+              --header 'Content-Type: text/xml' \
+              http://localhost:8080/pluginManager/installNecessaryPlugins
+          END
+          execute_script <<-END
+            while [ ! -d #{fetch :jenkins_home}/plugins/#{name} ];
+            do
+              echo "Waiting for plugin #{name} to be installed..."
+              sleep 5
+            done
+            echo "#{name} plugin installed."
           END
         end
       end
