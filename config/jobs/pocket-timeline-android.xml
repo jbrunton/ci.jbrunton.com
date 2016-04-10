@@ -28,7 +28,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>./gradlew testAll</command>
+      <command>./gradlew sonarqube testAll</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
