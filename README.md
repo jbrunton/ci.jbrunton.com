@@ -14,3 +14,6 @@ Some manual configuration is still necessary:
 * Go to 'Configure System', and for both Github and Github Pull Request Builder
   sections set the Github API URL to 'https://api.github.com' and configure to
   use the personal access token.
+* At time of writing, it's necessary to set the number of concurrent executors
+  to one, since the 4GB of memory on the DigitalOcean droplet I'm using is
+  insufficient for parallel jobs.

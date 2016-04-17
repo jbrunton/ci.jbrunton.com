@@ -42,7 +42,7 @@
       </statusMessage>
     </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
     <hudson.tasks.Shell>
-      <command>./gradlew sonarqube testAll</command>
+      <command>./gradlew testAll</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
