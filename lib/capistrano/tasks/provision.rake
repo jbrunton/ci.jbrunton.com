@@ -87,7 +87,8 @@ namespace :provision do
       on roles(:web) do
         [
           ['git', 'latest'],
-          ['github', 'latest']
+          ['github', 'latest'],
+          ['ghprb', 'latest']
         ].each do |plugin|
           name, version = plugin
           execute <<-END
