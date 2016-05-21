@@ -118,7 +118,11 @@ namespace :provision do
     task :configure_jobs do
       on roles(:web) do
         execute "mkdir -p /tmp/jobs"
-        ['pocket-timeline-android (push)', 'pocket-timeline-android (pr)'].each do |job_name|
+        [
+          'pocket-timeline-android (master)',
+          'pocket-timeline-android (push)',
+          'pocket-timeline-android (pr)'
+        ].each do |job_name|
           upload! "config/jenkins/jobs/#{job_name}.xml", "/tmp/jobs/#{job_name}.xml"
           execute <<-END
             java -jar jenkins-cli.jar \

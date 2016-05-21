@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.18.2">
+      <projectUrl>https://github.com/jbrunton/pocket-timeline-android.git/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.4">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/jbrunton/pocket-timeline-android.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.18.2">
+      <spec></spec>
+    </com.cloudbees.jenkins.GitHubPushTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <com.cloudbees.jenkins.GitHubSetCommitStatusBuilder plugin="github@1.18.2">
+      <statusMessage>
+        <content></content>
+      </statusMessage>
+    </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
+    <hudson.tasks.Shell>
+      <command>./gradlew testAll</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <com.cloudbees.jenkins.GitHubCommitNotifier plugin="github@1.18.2">
+      <statusMessage>
+        <content></content>
+      </statusMessage>
+      <resultOnFailure>FAILURE</resultOnFailure>
+    </com.cloudbees.jenkins.GitHubCommitNotifier>
+  </publishers>
+  <buildWrappers/>
+</project>
