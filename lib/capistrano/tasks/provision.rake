@@ -51,9 +51,13 @@ namespace :provision do
     on roles(:web) do
       execute <<-END
         cd #{fetch :jenkins_home}
-        wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
-        tar -xvf android-sdk_r24.4.1-linux.tgz
+        wget https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
+
+        execute "apt install unzip"
+        unzip sdk-tools-linux-3859397.zip -d android-sdk-linux
         chown -R jenkins:jenkins .
+
+        yes | ./android-sdk-linux/tools/bin/sdkmanager --licenses
         echo "ANDROID_HOME=#{fetch :jenkins_home}/android-sdk-linux" >> /etc/environment
       END
     end
