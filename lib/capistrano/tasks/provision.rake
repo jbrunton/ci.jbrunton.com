@@ -21,13 +21,10 @@ namespace :provision do
         echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
         add-apt-repository -y ppa:webupd8team/java
         apt-get update
-        apt-get install -y oracle-java6-installer
         apt-get install -y oracle-java8-installer
         rm -rf /var/lib/apt/lists/*
-        rm -rf /var/cache/oracle-jdk6-installer
         rm -rf /var/cache/oracle-jdk8-installer
         echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
-        echo "JAVA6_HOME=/usr/lib/jvm/java-6-oracle" >> /etc/environment
       END
     end
   end
@@ -35,7 +32,7 @@ namespace :provision do
   task :install_jenkins do
     on roles(:web) do
       execute <<-END
-        wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+        wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
         sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
         sudo apt-get update
         sudo apt-get install -y jenkins
@@ -57,7 +54,7 @@ namespace :provision do
         wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
         tar -xvf android-sdk_r24.4.1-linux.tgz
         chown -R jenkins:jenkins .
-        echo "ANDROID_HOME=$JENKINS_HOME/android-sdk-linux" >> /etc/environment
+        echo "ANDROID_HOME=#{fetch :jenkins_home}/android-sdk-linux" >> /etc/environment
       END
     end
   end
@@ -157,10 +154,10 @@ task :provision do
   Rake::Task["provision:install_git"].invoke
   Rake::Task["provision:install_android_sdk"].invoke
 
-  Rake::Task["provision:jenkins:install_plugins"].invoke
-  Rake::Task["provision:jenkins:configure_system"].invoke
-  Rake::Task["provision:jenkins:configure_jobs"].invoke
-  Rake::Task['provision:jenkins:restart'].invoke
+  #Rake::Task["provision:jenkins:install_plugins"].invoke
+  #Rake::Task["provision:jenkins:configure_system"].invoke
+  #Rake::Task["provision:jenkins:configure_jobs"].invoke
+  #Rake::Task['provision:jenkins:restart'].invoke
 
   Rake::Task["provision:sonar:install"].invoke
 end

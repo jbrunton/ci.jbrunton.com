@@ -3,6 +3,8 @@ lock '3.4.0'
 
 set :application, 'ci.jbrunton.com'
 set :jenkins_home, '/var/lib/jenkins'
+set :sonar_home, '/opt/sonar'
+set :sonar_plugins_dir, "#{fetch :sonar_home}/extensions/plugins"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp

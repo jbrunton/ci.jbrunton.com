@@ -1,4 +1,5 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     capistrano (3.4.0)
       i18n
@@ -20,3 +21,6 @@ PLATFORMS
 
 DEPENDENCIES
   capistrano
+
+BUNDLED WITH
+   1.15.0
